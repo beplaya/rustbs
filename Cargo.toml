@@ -1,0 +1,6 @@
+[package]
+name = "rustbs"
+version = "0.1.0"
+authors = ["beplaya <beplaya@gmail.com>"]
+
+[dependencies]
