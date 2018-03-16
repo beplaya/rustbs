@@ -1,11 +1,13 @@
 
 struct Babysitter {
-
+    standard_rate : i32
 }
 
 impl Babysitter {
     pub fn get_earnings(&self, arrivalTime: i32, departureTime: i32, bedtime: i32) -> i32 {
-        return 0;
+        let earnings : i32;
+        earnings = self.standard_rate * self.get_hours_before_bedtime(arrivalTime, departureTime, bedtime);
+        return earnings;
     }
 
     fn get_hours_before_bedtime(&self, arrivalTime: i32, departureTime: i32, bedtime: i32) -> i32 {
@@ -50,17 +52,18 @@ impl Babysitter {
 mod babysitter_tests {
     use Babysitter;
 
+    const babysitter : Babysitter  = Babysitter{ standard_rate: 10 };
+
     #[test]
     fn it_gets_no_earnings() {
-        let babysitter = Babysitter {};
         assert_eq!(babysitter.get_earnings(5, 5, 12), 0);
         assert_eq!(babysitter.get_earnings(12, 12, 12), 0);
         assert_eq!(babysitter.get_earnings(4, 4, 12), 0);
+        assert_eq!(babysitter.get_earnings(5, 5, 5), 0);
     }
 
     #[test]
     fn it_gets_hours_of_work_before_bedtime() {
-        let babysitter = Babysitter {};
         assert_eq!(babysitter.get_hours_before_bedtime(5, 4, 12), 12 - 5);
         assert_eq!(babysitter.get_hours_before_bedtime(4, 4, 12), 0);
         assert_eq!(babysitter.get_hours_before_bedtime(1, 4, 12), 0);
@@ -69,7 +72,6 @@ mod babysitter_tests {
 
     #[test]
     fn it_gets_hours_of_work_after_bedtime() {
-        let babysitter = Babysitter {};
         assert_eq!(babysitter.get_hours_after_bedtime(5, 12, 8), 4);
         assert_eq!(babysitter.get_hours_after_bedtime(4, 4, 12), 0);
         assert_eq!(babysitter.get_hours_after_bedtime(1, 4, 12), 4);
@@ -78,11 +80,14 @@ mod babysitter_tests {
 
     #[test]
     fn it_gets_hours_of_work_after_midnight() {
-        let babysitter = Babysitter {};
         assert_eq!(babysitter.get_hours_after_midnight(5, 12, 8), 0);
         assert_eq!(babysitter.get_hours_after_midnight(4, 4, 12), 4);
         assert_eq!(babysitter.get_hours_after_midnight(1, 4, 12), 4);
         assert_eq!(babysitter.get_hours_after_midnight(5, 4, 5), 4);
     }
 
+    #[test]
+    fn it_gets_standard_earnings() {
+        assert_eq!(babysitter.get_earnings(5, 8, 8), 3 * 10);
+    }
 }
