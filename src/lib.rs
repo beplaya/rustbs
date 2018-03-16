@@ -32,6 +32,16 @@ impl Babysitter {
         }
         return hours;
     }
+
+    fn get_hours_after_midnight(&self, arrivalTime: i32, departureTime: i32, bedtime: i32) -> i32 {
+        let hours : i32;
+        if departureTime < 5 {
+            hours = departureTime;
+        } else {
+            hours = 0;
+        }
+        return hours;
+    }
 }
 
 
@@ -66,5 +76,13 @@ mod babysitter_tests {
         assert_eq!(babysitter.get_hours_after_bedtime(5, 4, 5), (12 - 5) + 4);
     }
 
+    #[test]
+    fn it_gets_hours_of_work_after_midnight() {
+        let babysitter = Babysitter {};
+        assert_eq!(babysitter.get_hours_after_midnight(5, 12, 8), 0);
+        assert_eq!(babysitter.get_hours_after_midnight(4, 4, 12), 4);
+        assert_eq!(babysitter.get_hours_after_midnight(1, 4, 12), 4);
+        assert_eq!(babysitter.get_hours_after_midnight(5, 4, 5), 4);
+    }
 
 }
