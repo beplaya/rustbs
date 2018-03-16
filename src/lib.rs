@@ -11,7 +11,7 @@ impl Babysitter {
         if arrival_time != departure_time {
             earnings += self.standard_rate * self.get_hours_before_bedtime(arrival_time, departure_time, bedtime);
             earnings += self.house_sit_rate * self.get_hours_after_bedtime(arrival_time, departure_time, bedtime);
-            earnings += self.after_midnight_bonus * self.get_hours_after_midnight(arrival_time, departure_time, bedtime);
+            earnings += self.after_midnight_bonus * self.get_hours_after_midnight(departure_time);
         }
         return earnings;
     }
@@ -41,7 +41,7 @@ impl Babysitter {
         return hours;
     }
 
-    fn get_hours_after_midnight(&self, arrival_time: i32, departure_time: i32, bedtime: i32) -> i32 {
+    fn get_hours_after_midnight(&self, departure_time: i32) -> i32 {
         let hours: i32;
         if departure_time < 5 {
             hours = departure_time;
@@ -85,11 +85,11 @@ mod babysitter_tests {
 
     #[test]
     fn it_gets_hours_of_work_after_midnight() {
-        assert_eq!(BABYSITTER.get_hours_after_midnight(5, 12, 8), 0);
-        assert_eq!(BABYSITTER.get_hours_after_midnight(4, 4, 12), 4);
-        assert_eq!(BABYSITTER.get_hours_after_midnight(1, 4, 12), 4);
-        assert_eq!(BABYSITTER.get_hours_after_midnight(5, 4, 5), 4);
-        assert_eq!(BABYSITTER.get_hours_after_midnight(12, 4, 8), 4);
+        assert_eq!(BABYSITTER.get_hours_after_midnight(12), 0);
+        assert_eq!(BABYSITTER.get_hours_after_midnight(4), 4);
+        assert_eq!(BABYSITTER.get_hours_after_midnight(4), 4);
+        assert_eq!(BABYSITTER.get_hours_after_midnight(4), 4);
+        assert_eq!(BABYSITTER.get_hours_after_midnight(4), 4);
     }
 
     #[test]
