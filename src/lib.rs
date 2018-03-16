@@ -1,12 +1,14 @@
 
 struct Babysitter {
-    standard_rate : i32
+    standard_rate : i32,
+    house_sit_rate : i32
 }
 
 impl Babysitter {
     pub fn get_earnings(&self, arrivalTime: i32, departureTime: i32, bedtime: i32) -> i32 {
-        let earnings : i32;
-        earnings = self.standard_rate * self.get_hours_before_bedtime(arrivalTime, departureTime, bedtime);
+        let mut earnings : i32 = 0;
+        earnings += self.standard_rate * self.get_hours_before_bedtime(arrivalTime, departureTime, bedtime);
+        earnings += self.house_sit_rate * self.get_hours_after_bedtime(arrivalTime, departureTime, bedtime);
         return earnings;
     }
 
@@ -52,7 +54,7 @@ impl Babysitter {
 mod babysitter_tests {
     use Babysitter;
 
-    const babysitter : Babysitter  = Babysitter{ standard_rate: 10 };
+    const babysitter : Babysitter  = Babysitter{ standard_rate: 10, house_sit_rate: 6 };
 
     #[test]
     fn it_gets_no_earnings() {
@@ -88,6 +90,11 @@ mod babysitter_tests {
 
     #[test]
     fn it_gets_standard_earnings() {
-        assert_eq!(babysitter.get_earnings(5, 8, 8), 3 * 10);
+        assert_eq!(babysitter.get_earnings(5, 8, 8), 3 * babysitter.standard_rate);
+    }
+
+    #[test]
+    fn it_gets_house_sit_earnings() {
+        assert_eq!(babysitter.get_earnings(8, 12, 8), 4 * babysitter.house_sit_rate);
     }
 }
