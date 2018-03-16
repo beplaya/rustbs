@@ -1,19 +1,22 @@
-
 struct Babysitter {
-    standard_rate : i32,
-    house_sit_rate : i32
+    standard_rate: i32,
+    house_sit_rate: i32,
+    after_midnight_bonus: i32,
 }
 
 impl Babysitter {
     pub fn get_earnings(&self, arrivalTime: i32, departureTime: i32, bedtime: i32) -> i32 {
-        let mut earnings : i32 = 0;
-        earnings += self.standard_rate * self.get_hours_before_bedtime(arrivalTime, departureTime, bedtime);
-        earnings += self.house_sit_rate * self.get_hours_after_bedtime(arrivalTime, departureTime, bedtime);
+        let mut earnings: i32 = 0;
+        if arrivalTime != departureTime {
+            earnings += self.standard_rate * self.get_hours_before_bedtime(arrivalTime, departureTime, bedtime);
+            earnings += self.house_sit_rate * self.get_hours_after_bedtime(arrivalTime, departureTime, bedtime);
+            earnings += self.after_midnight_bonus * self.get_hours_after_midnight(arrivalTime, departureTime, bedtime);
+        }
         return earnings;
     }
 
     fn get_hours_before_bedtime(&self, arrivalTime: i32, departureTime: i32, bedtime: i32) -> i32 {
-        let hours : i32;
+        let hours: i32;
         if arrivalTime == departureTime {
             hours = 0;
         } else if arrivalTime < 5 {
@@ -26,7 +29,7 @@ impl Babysitter {
 
 
     fn get_hours_after_bedtime(&self, arrivalTime: i32, departureTime: i32, bedtime: i32) -> i32 {
-        let hours : i32;
+        let hours: i32;
         if arrivalTime == departureTime {
             hours = 0;
         } else if departureTime < 5 {
@@ -38,7 +41,7 @@ impl Babysitter {
     }
 
     fn get_hours_after_midnight(&self, arrivalTime: i32, departureTime: i32, bedtime: i32) -> i32 {
-        let hours : i32;
+        let hours: i32;
         if departureTime < 5 {
             hours = departureTime;
         } else {
@@ -49,12 +52,11 @@ impl Babysitter {
 }
 
 
-
 #[cfg(test)]
 mod babysitter_tests {
     use Babysitter;
 
-    const babysitter : Babysitter  = Babysitter{ standard_rate: 10, house_sit_rate: 6 };
+    const babysitter: Babysitter = Babysitter { standard_rate: 10, house_sit_rate: 6, after_midnight_bonus: 2 };
 
     #[test]
     fn it_gets_no_earnings() {
@@ -86,6 +88,7 @@ mod babysitter_tests {
         assert_eq!(babysitter.get_hours_after_midnight(4, 4, 12), 4);
         assert_eq!(babysitter.get_hours_after_midnight(1, 4, 12), 4);
         assert_eq!(babysitter.get_hours_after_midnight(5, 4, 5), 4);
+        assert_eq!(babysitter.get_hours_after_midnight(12, 4, 8), 4);
     }
 
     #[test]
@@ -96,5 +99,10 @@ mod babysitter_tests {
     #[test]
     fn it_gets_house_sit_earnings() {
         assert_eq!(babysitter.get_earnings(8, 12, 8), 4 * babysitter.house_sit_rate);
+    }
+
+    #[test]
+    fn it_gets_after_midnight_earnings() {
+        assert_eq!(babysitter.get_earnings(12, 4, 12), 4 * (babysitter.house_sit_rate + babysitter.after_midnight_bonus));
     }
 }
