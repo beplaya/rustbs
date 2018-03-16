@@ -1,11 +1,16 @@
+const EARLIEST_ARRIVAL_TIME: i32 = 5;
+const LATEST_BEDTIME: i32 = 12;
+
 struct Babysitter {
     standard_rate: i32,
     house_sit_rate: i32,
-    after_midnight_bonus: i32,
+    after_midnight_bonus: i32
 }
 
 #[allow(dead_code)]
 impl Babysitter {
+
+
     fn get_earnings(&self, arrival_time: i32, departure_time: i32, bedtime: i32) -> i32 {
         let mut earnings: i32 = 0;
         if arrival_time != departure_time {
@@ -20,7 +25,7 @@ impl Babysitter {
         let hours: i32;
         if arrival_time == departure_time {
             hours = 0;
-        } else if arrival_time < 5 {
+        } else if arrival_time < EARLIEST_ARRIVAL_TIME {
             hours = 0;
         } else {
             hours = bedtime - arrival_time;
@@ -28,13 +33,12 @@ impl Babysitter {
         return hours;
     }
 
-
     fn get_hours_after_bedtime(&self, arrival_time: i32, departure_time: i32, bedtime: i32) -> i32 {
         let hours: i32;
         if arrival_time == departure_time {
             hours = 0;
-        } else if departure_time < 5 {
-            hours = (12 - bedtime) + departure_time;
+        } else if departure_time < EARLIEST_ARRIVAL_TIME {
+            hours = (LATEST_BEDTIME - bedtime) + departure_time;
         } else {
             hours = departure_time - bedtime;
         }
@@ -43,7 +47,7 @@ impl Babysitter {
 
     fn get_hours_after_midnight(&self, departure_time: i32) -> i32 {
         let hours: i32;
-        if departure_time < 5 {
+        if departure_time < EARLIEST_ARRIVAL_TIME {
             hours = departure_time;
         } else {
             hours = 0;
