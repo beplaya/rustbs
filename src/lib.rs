@@ -23,15 +23,10 @@ impl Schedule {
     }
 
     fn get_hours_before_bedtime(&self, arrival_time: i32, departure_time: i32, bedtime: i32) -> i32 {
-        let hours: i32;
-        if self.is_zero_hour_shift(arrival_time, departure_time) {
-            hours = 0;
-        } else if arrival_time < self.earliest_arrival {
-            hours = 0;
-        } else {
-            hours = bedtime - arrival_time;
+        if !self.is_zero_hour_shift(arrival_time, departure_time) && arrival_time >= self.earliest_arrival {
+            return bedtime - arrival_time;
         }
-        return hours;
+        return 0;
     }
 
     fn get_hours_after_bedtime(&self, arrival_time: i32, departure_time: i32, bedtime: i32) -> i32 {
