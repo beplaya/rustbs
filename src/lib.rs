@@ -21,11 +21,11 @@ impl Schedule {
     }
 
     fn all_work_after_midnight(&self, arrival_time: i32, departure_time: i32) -> bool {
-        return arrival_time < self.earliest_arrival && departure_time < self.earliest_arrival;
+        return self.the(arrival_time).is_after_midnight() && self.the(departure_time).is_after_midnight();
     }
 
     fn get_hours_before_bedtime(&self, arrival_time: i32, departure_time: i32, bedtime: i32) -> i32 {
-        if !self.is_zero_hour_shift(arrival_time, departure_time) && arrival_time >= self.earliest_arrival {
+        if !self.is_zero_hour_shift(arrival_time, departure_time) && self.the(arrival_time).is_before_midnight() {
             return bedtime - arrival_time;
         }
         return 0;
@@ -37,7 +37,7 @@ impl Schedule {
             hours = 0;
         } else if self.all_work_after_midnight(arrival_time, departure_time) {
             hours = departure_time - arrival_time;
-        } else if departure_time < self.earliest_arrival {
+        } else if self.the(departure_time).is_after_midnight() {
             hours = (self.latest_bedtime - bedtime) + departure_time;
         } else {
             hours = departure_time - bedtime;
@@ -49,7 +49,7 @@ impl Schedule {
         let hours: i32;
         if self.all_work_after_midnight(arrival_time, departure_time) {
             hours = departure_time - arrival_time;
-        } else if departure_time < self.earliest_arrival {
+        } else if self.the(departure_time).is_after_midnight() {
             hours = departure_time;
         } else {
             hours = 0;
