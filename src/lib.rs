@@ -58,9 +58,7 @@ impl Schedule {
     }
 
     fn is_valid_schedule(&self, arrival_time: i32, departure_time: i32) -> bool {
-        if self.the(arrival_time).is_after_midnight() && self.the(departure_time).is_after_midnight() {
-            return arrival_time <= departure_time;
-        } else if self.the(arrival_time).is_before_midnight() && self.the(departure_time).is_before_midnight() {
+        if self.the(arrival_time).is_after_midnight() == self.the(departure_time).is_after_midnight() {
             return arrival_time <= departure_time;
         } else if self.the(arrival_time).is_after_midnight() && self.the(departure_time).is_before_midnight() {
             return false;
